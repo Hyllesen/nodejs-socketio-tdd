@@ -3,23 +3,26 @@ const server = require("../server");
 
 let client;
 
-beforeAll(done => {
-  server.listen(3000);
-  client = io.connect("http://localhost:3000", () => {
-    done();
-  });
+beforeAll(async done => {
+  await server.listen(3000);
+  client = io.connect("http://localhost:3000");
+  done();
 });
 
-afterAll(() => {
-  server.disconnect();
+afterAll(async () => {
+  await server.disconnect();
+  client.removeAllListeners();
+  client.disconnect();
 });
 
 describe("Chat server", () => {
   it("should greet user connecting", done => {
-    client.emit("join");
-    client.on("joined", data => {
-      expect(data).toBe("Welcome to the chat!");
+    client.once("joined", data => {
+      expect(data).toBe("Welcome to the chat");
+      expect(data).toBe("Welcome to the chat");
       done();
     });
+
+    client.emit("join");
   });
 });

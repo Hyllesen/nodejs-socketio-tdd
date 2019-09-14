@@ -5,7 +5,6 @@ const io = require("socket.io")(http);
 io.on("connection", socket => {
   console.log("new connection");
   socket.on("join", () => {
-    console.log("a user joined");
     socket.emit("joined", "Welcome to the chat");
   });
 });
