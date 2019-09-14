@@ -1,7 +1,11 @@
 const JOIN = "JOIN";
 const USER_JOINED = "USER_JOINED";
+const CHAT_MESSAGE = "CHAT_MESSAGE";
+const USER_TYPING = "USER_TYPING";
 
 module.exports = {
   JOIN,
-  USER_JOINED
+  USER_JOINED,
+  CHAT_MESSAGE,
+  USER_TYPING
 };
