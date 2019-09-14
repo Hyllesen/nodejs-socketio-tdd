@@ -1,28 +1,27 @@
 const io = require("socket.io-client");
 const server = require("../server");
+const eventTypes = require("../eventTypes");
 
-let client;
+let client1, client2;
 
-beforeAll(async done => {
+beforeAll(async () => {
+  jest.setTimeout(400);
   await server.listen(3000);
-  client = io.connect("http://localhost:3000");
-  done();
+  client1 = io.connect("http://localhost:3000");
+  client2 = io.connect("http://localhost:3000");
 });
 
 afterAll(async () => {
   await server.disconnect();
-  client.removeAllListeners();
-  client.disconnect();
 });
 
 describe("Chat server", () => {
-  it("should greet user connecting", done => {
-    client.once("joined", data => {
-      expect(data).toBe("Welcome to the chat");
-      expect(data).toBe("Welcome to the chat");
+  it("should display when a user joins public chat", done => {
+    client2.once(eventTypes.USER_JOINED, data => {
+      expect(data).toBe("Client2 joined the chat");
       done();
     });
-
-    client.emit("join");
+    client1.emit(eventTypes.JOIN, { username: "Client1" });
+    client2.emit(eventTypes.JOIN, { username: "Client2" });
   });
 });

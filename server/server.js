@@ -1,11 +1,12 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
+const eventTypes = require("./eventTypes");
 
 io.on("connection", socket => {
   console.log("new connection");
-  socket.on("join", () => {
-    socket.emit("joined", "Welcome to the chat");
+  socket.on(eventTypes.JOIN, msg => {
+    socket.emit(eventTypes.USER_JOINED, msg.username + " joined the chat");
   });
 });
 
