@@ -4,48 +4,53 @@ const { USER_TYPING } = require("../../eventTypes");
 const _ = require("lodash");
 const lolex = require("lolex");
 
-const clock = lolex.install();
+let clock = lolex.install();
 
-const socket = new MockedSocket();
+const johnSocket = new MockedSocket();
+const otherSocket = new MockedSocket();
 const io = new MockedSocket();
-socket.id = "JohnSocketId";
+johnSocket.id = "JohnSocketId";
+otherSocket.id = "AnotherTyperId";
 
 jest.spyOn(io, "emit");
 
 const people = {
   di09309jjd: "Receiving Typing User",
-  JohnSocketId: "John"
+  JohnSocketId: "John",
+  AnotherTyperId: "AnotherTyper"
 };
+
+beforeAll(() => {
+  clock = lolex.install();
+});
+
+beforeAll(() => {
+  typingHandler.handleTyping(io, johnSocket, people);
+  typingHandler.handleTyping(io, otherSocket, people);
+});
 
 describe("TypingHandler", () => {
   it("should send typing to all users when user is typing", () => {
-    typingHandler.handleTyping(io, socket, people);
-    socket.socketClient.emit(USER_TYPING, {});
+    johnSocket.socketClient.emit(USER_TYPING, {});
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, ["John"]);
   });
   it("if typing hasnt been called for a while, send update", () => {
-    typingHandler.handleTyping(io, socket, people);
-    socket.socketClient.emit(USER_TYPING, {});
+    johnSocket.socketClient.emit(USER_TYPING, {});
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, ["John"]);
-    clock.runAll();
+    clock.tick(2000);
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, []);
   });
-});
-
-describe("debounce", () => {
-  let func;
-  let debouncedFunc;
-
-  beforeEach(() => {
-    func = jest.fn();
-    debouncedFunc = _.debounce(func, 1000);
+  it("should show typing notification for multiple users", () => {
+    johnSocket.socketClient.emit(USER_TYPING, {});
+    otherSocket.socketClient.emit(USER_TYPING, {});
+    expect(io.emit).toHaveBeenCalledWith(USER_TYPING, ["John", "AnotherTyper"]);
   });
-
-  test("execute just once", () => {
-    for (let i = 0; i < 100; i++) {
-      debouncedFunc();
-    }
-    clock.runAll();
-    expect(func).toBeCalledTimes(1);
+  it("should only clear typing of user who expired", () => {
+    johnSocket.socketClient.emit(USER_TYPING, {});
+    clock.tick(1000);
+    otherSocket.socketClient.emit(USER_TYPING, {});
+    clock.tick(1000);
+    expect(io.emit).toHaveBeenCalledWith(USER_TYPING, ["AnotherTyper"]);
+    clock.next();
   });
 });

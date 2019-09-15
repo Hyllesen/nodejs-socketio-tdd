@@ -10,10 +10,10 @@ const {
 let client1, client2;
 
 beforeAll(async () => {
-  jest.setTimeout(400);
-  await server.listen(3000);
-  client1 = io.connect("http://localhost:3000");
-  client2 = io.connect("http://localhost:3000");
+  jest.setTimeout(300);
+  await server.listen(3001);
+  client1 = io.connect("http://localhost:3001");
+  client2 = io.connect("http://localhost:3001");
 });
 
 afterAll(async () => {
