@@ -1,6 +1,10 @@
 const typingHandler = require("../../event-handlers").typingHandler;
 const MockedSocket = require("socket.io-mock");
 const { USER_TYPING } = require("../../eventTypes");
+const _ = require("lodash");
+const lolex = require("lolex");
+
+const clock = lolex.install();
 
 const socket = new MockedSocket();
 const io = new MockedSocket();
@@ -20,11 +24,28 @@ describe("TypingHandler", () => {
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, ["John"]);
   });
   it("if typing hasnt been called for a while, send update", () => {
-    jest.useFakeTimers();
     typingHandler.handleTyping(io, socket, people);
     socket.socketClient.emit(USER_TYPING, {});
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, ["John"]);
-    jest.runAllTimers();
+    clock.runAll();
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, []);
+  });
+});
+
+describe("debounce", () => {
+  let func;
+  let debouncedFunc;
+
+  beforeEach(() => {
+    func = jest.fn();
+    debouncedFunc = _.debounce(func, 1000);
+  });
+
+  test("execute just once", () => {
+    for (let i = 0; i < 100; i++) {
+      debouncedFunc();
+    }
+    clock.runAll();
+    expect(func).toBeCalledTimes(1);
   });
 });
