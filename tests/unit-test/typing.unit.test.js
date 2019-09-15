@@ -20,9 +20,11 @@ describe("TypingHandler", () => {
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, ["John"]);
   });
   it("if typing hasnt been called for a while, send update", () => {
+    jest.useFakeTimers();
     typingHandler.handleTyping(io, socket, people);
     socket.socketClient.emit(USER_TYPING, {});
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, ["John"]);
+    jest.runAllTimers();
     expect(io.emit).toHaveBeenCalledWith(USER_TYPING, []);
   });
 });
