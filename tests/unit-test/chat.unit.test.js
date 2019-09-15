@@ -1,9 +1,9 @@
 const chatHandler = require("../../event-handlers").chatHandler;
 const { CHAT_MESSAGE } = require("../../eventTypes");
-const MockSocket = require("socket.io-mock");
+const MockedSocket = require("socket.io-mock");
 
-const socket = new MockSocket();
-const io = new MockSocket();
+const socket = new MockedSocket();
+const io = new MockedSocket();
 
 jest.spyOn(io, "emit");
 
