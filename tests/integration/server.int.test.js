@@ -1,11 +1,11 @@
 const io = require("socket.io-client");
-const server = require("../server");
+const server = require("../../server");
 const {
   JOIN,
   USER_JOINED,
   USER_TYPING,
   CHAT_MESSAGE
-} = require("../eventTypes");
+} = require("../../eventTypes");
 
 let client1, client2;
 
@@ -22,8 +22,8 @@ afterAll(async () => {
 
 describe("Chat server", () => {
   it("should display when a user joins public chat", done => {
-    client2.once(USER_JOINED, data => {
-      expect(data).toBe("Client2 joined the chat");
+    client2.once(JOIN, data => {
+      expect(data).toBe("Client1 joined the chat");
       done();
     });
     client1.emit(JOIN, { username: "Client1" });

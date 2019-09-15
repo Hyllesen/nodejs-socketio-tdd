@@ -8,16 +8,14 @@ const {
   USER_JOINED,
   USER_TYPING
 } = require("./eventTypes");
+const joinHandler = require("./event-handlers/join.event-handler");
 
 const usersTyping = {};
 
 const people = {};
 
 io.on("connection", socket => {
-  socket.on(JOIN, msg => {
-    people[socket.id] = msg.username;
-    socket.emit(USER_JOINED, msg.username + " joined the chat");
-  });
+  joinHandler.handleJoin(io, socket, people);
   socket.on(CHAT_MESSAGE, msg => {
     io.emit(CHAT_MESSAGE, msg);
   });
