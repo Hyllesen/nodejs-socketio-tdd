@@ -1,6 +1,6 @@
 const joinHandler = require("../../event-handlers/join.event-handler");
 const {
-  JOIN,
+  USER_JOIN,
   USERS_ONLINE,
   DISCONNECT,
   USER_LEFT
@@ -33,9 +33,9 @@ describe("Join Handler", () => {
   it("should emit Welcome to chat to other users", () => {
     joinHandler.handleJoin(io, socket, people);
     const testMsg = { username: "Benny" };
-    socket.socketClient.emit(JOIN, testMsg);
+    socket.socketClient.emit(USER_JOIN, testMsg);
     expect(io.emit).toHaveBeenCalledWith(
-      JOIN,
+      USER_JOIN,
       testMsg.username + " joined the chat"
     );
     expect(people[mockSocketId]).toBe(testMsg.username);
@@ -43,16 +43,15 @@ describe("Join Handler", () => {
   it("should emit the total users online", () => {
     const testMsg = { username: "Benny" };
     const testMsg2 = { username: "John" };
-    socket.socketClient.emit(JOIN, testMsg);
-    socket2.socketClient.emit(JOIN, testMsg2);
-    console.log(emitSpy.calls);
+    socket.socketClient.emit(USER_JOIN, testMsg);
+    socket2.socketClient.emit(USER_JOIN, testMsg2);
     expect(io.emit).toHaveBeenCalledWith(USERS_ONLINE, ["Benny", "John"]);
   });
   it("should show leave message and update users online", () => {
     const testMsg = { username: "Benny" };
     const testMsg2 = { username: "John" };
-    socket.socketClient.emit(JOIN, testMsg);
-    socket2.socketClient.emit(JOIN, testMsg2);
+    socket.socketClient.emit(USER_JOIN, testMsg);
+    socket2.socketClient.emit(USER_JOIN, testMsg2);
     socket.socketClient.emit(DISCONNECT, {});
     expect(io.emit).toHaveBeenCalledWith(USER_LEFT, "Benny left the chat");
     expect(io.emit).toHaveBeenCalledWith(USERS_ONLINE, ["John"]);

@@ -8,6 +8,7 @@ const people = {};
 
 io.on("connection", socket => {
   joinHandler.handleJoin(io, socket, people);
+  joinHandler.handleDisconnect(io, socket, people);
   chatHandler.handleChat(io, socket);
   typingHandler.handleTyping(io, socket, people);
 });
@@ -24,7 +25,7 @@ async function listen(port) {
 async function disconnect() {
   return new Promise(resolve => {
     io.close(() => {
-      console.log("server disconnected");
+      //console.log("server disconnected");
       resolve();
     });
   });
