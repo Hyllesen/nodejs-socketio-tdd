@@ -4,7 +4,6 @@ const { USER_TYPING } = require("../eventTypes");
 const typingNotifications = [];
 
 const clearTypingNotifications = (username, io) => {
-  console.log("clear typing notif", username);
   const index = typingNotifications.indexOf(username);
   if (index !== -1) {
     typingNotifications.splice(index, 1);
