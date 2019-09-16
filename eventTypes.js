@@ -2,7 +2,6 @@ const CHAT_MESSAGE = "CHAT_MESSAGE";
 const USER_TYPING = "USER_TYPING";
 const USERS_ONLINE = "USERS_ONLINE";
 const DISCONNECT = "DISCONNECT";
-const USER_LEFT = "USER_LEFT";
 const USER_JOIN = "JOIN";
 
 module.exports = {
@@ -10,6 +9,5 @@ module.exports = {
   CHAT_MESSAGE,
   USER_TYPING,
   USERS_ONLINE,
-  DISCONNECT,
-  USER_LEFT
+  DISCONNECT
 };

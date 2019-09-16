@@ -53,7 +53,7 @@ describe("Join Handler", () => {
     socket.socketClient.emit(USER_JOIN, testMsg);
     socket2.socketClient.emit(USER_JOIN, testMsg2);
     socket.socketClient.emit(DISCONNECT, {});
-    expect(io.emit).toHaveBeenCalledWith(USER_LEFT, "Benny left the chat");
+    expect(io.emit).toHaveBeenCalledWith(DISCONNECT, "Benny left the chat");
     expect(io.emit).toHaveBeenCalledWith(USERS_ONLINE, ["John"]);
   });
 });

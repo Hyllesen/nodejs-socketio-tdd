@@ -1,19 +1,22 @@
 const io = require("socket.io-client");
 const server = require("../../server");
-const { USER_JOIN, USER_TYPING, CHAT_MESSAGE } = require("../../eventTypes");
+const {
+  USER_JOIN,
+  USER_TYPING,
+  CHAT_MESSAGE,
+  DISCONNECT
+} = require("../../eventTypes");
 
 let client1, client2;
 
-beforeEach(async () => {
+beforeAll(async () => {
   jest.setTimeout(300);
   await server.listen(3001);
   client1 = io.connect("http://localhost:3001");
   client2 = io.connect("http://localhost:3001");
 });
 
-afterEach(async () => {
-  await client1.close();
-  await client2.close();
+afterAll(async () => {
   await server.disconnect();
 });
 
@@ -53,5 +56,12 @@ describe("Chat server", () => {
     });
     client1.emit(USER_JOIN, { username: "Client1" });
     client2.emit(USER_JOIN, { username: "Client2" });
+  });
+  it("should display when a user disconnects", done => {
+    client2.once(DISCONNECT, data => {
+      expect(data).toBe("Client1 left the chat");
+      done();
+    });
+    client1.emit(DISCONNECT, {});
   });
 });

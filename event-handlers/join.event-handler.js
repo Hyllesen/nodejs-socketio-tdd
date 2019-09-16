@@ -16,7 +16,7 @@ function handleJoin(io, socket, people) {
 
 function handleDisconnect(io, socket, people) {
   socket.on(DISCONNECT, () => {
-    io.emit(USER_LEFT, people[socket.id] + " left the chat");
+    io.emit(DISCONNECT, people[socket.id] + " left the chat");
     delete people[socket.id];
     io.emit(USERS_ONLINE, _.values(people));
   });
