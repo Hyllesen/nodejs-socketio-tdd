@@ -1,4 +1,4 @@
-const joinHandler = require("../../event-handlers/join.event-handler");
+const joinHandler = require("../../event-handlers/join.disconnect.event-handler");
 const {
   USER_JOIN,
   USERS_ONLINE,

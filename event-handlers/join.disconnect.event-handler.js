@@ -1,9 +1,4 @@
-const {
-  USERS_ONLINE,
-  DISCONNECT,
-  USER_LEFT,
-  USER_JOIN
-} = require("../eventTypes");
+const { USERS_ONLINE, DISCONNECT, USER_JOIN } = require("../eventTypes");
 const _ = require("lodash");
 
 function handleJoin(io, socket, people) {
