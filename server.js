@@ -2,10 +2,7 @@ const app = require("express")();
 const http = require("http").createServer(app);
 const _ = require("lodash");
 const io = require("socket.io")(http);
-const { USER_TYPING } = require("./eventTypes");
 const { joinHandler, chatHandler, typingHandler } = require("./event-handlers");
-
-const usersTyping = {};
 
 const people = {};
 

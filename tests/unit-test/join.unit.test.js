@@ -1,5 +1,10 @@
 const joinHandler = require("../../event-handlers/join.event-handler");
-const { JOIN, USERS_ONLINE } = require("../../eventTypes");
+const {
+  JOIN,
+  USERS_ONLINE,
+  DISCONNECT,
+  USER_LEFT
+} = require("../../eventTypes");
 const MockedSocket = require("socket.io-mock");
 
 let socket = new MockedSocket();
@@ -17,6 +22,8 @@ const emitSpy = jest.spyOn(io, "emit");
 beforeEach(() => {
   joinHandler.handleJoin(io, socket, people);
   joinHandler.handleJoin(io, socket2, people);
+  joinHandler.handleDisconnect(io, socket, people);
+  joinHandler.handleDisconnect(io, socket2, people);
 });
 
 describe("Join Handler", () => {
@@ -40,5 +47,14 @@ describe("Join Handler", () => {
     socket2.socketClient.emit(JOIN, testMsg2);
     console.log(emitSpy.calls);
     expect(io.emit).toHaveBeenCalledWith(USERS_ONLINE, ["Benny", "John"]);
+  });
+  it("should show leave message and update users online", () => {
+    const testMsg = { username: "Benny" };
+    const testMsg2 = { username: "John" };
+    socket.socketClient.emit(JOIN, testMsg);
+    socket2.socketClient.emit(JOIN, testMsg2);
+    socket.socketClient.emit(DISCONNECT, {});
+    expect(io.emit).toHaveBeenCalledWith(USER_LEFT, "Benny left the chat");
+    expect(io.emit).toHaveBeenCalledWith(USERS_ONLINE, ["John"]);
   });
 });
