@@ -2,11 +2,28 @@ const app = require("express")();
 const http = require("http").createServer(app);
 const _ = require("lodash");
 const io = require("socket.io")(http);
+const jwt = require("jsonwebtoken");
 const { joinHandler, chatHandler, typingHandler } = require("./event-handlers");
-
+const { CONNECTION } = require("./eventTypes");
 const people = {};
 
-io.on("connection", socket => {
+io.on(CONNECTION, socket => {
+  io.use((socket, next) => {
+    if (socket.request.headers.authorization) {
+      jwt.verify(
+        socket.request.headers.authorization,
+        "dfjs98djfsd8fjsdf8h",
+        err => {
+          if (err) {
+            next(new Error("Authentication error"));
+          } else {
+            return next();
+          }
+        }
+      );
+    }
+    next(new Error("Missing authorization header"));
+  });
   joinHandler.handleJoin(io, socket, people);
   joinHandler.handleDisconnect(io, socket, people);
   chatHandler.handleChat(io, socket);

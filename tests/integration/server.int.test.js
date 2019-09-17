@@ -1,4 +1,5 @@
 const io = require("socket.io-client");
+const jwt = require("jsonwebtoken");
 const server = require("../../server");
 const {
   USER_JOIN,
@@ -8,13 +9,22 @@ const {
   PRIVATE_MESSAGE
 } = require("../../eventTypes");
 
-let client1, client2;
+let client1, client2, unauthorizedClient;
 
 beforeAll(async () => {
+  const token = jwt.sign({}, "dfjs98djfsd8fjsdf8h");
   jest.setTimeout(300);
   await server.listen(3001);
-  client1 = io.connect("http://localhost:3001");
-  client2 = io.connect("http://localhost:3001");
+  client1 = io.connect("http://localhost:3001", {
+    extraHeaders: {
+      Authorization: token
+    }
+  });
+  client2 = io.connect("http://localhost:3001", {
+    extraHeaders: {
+      Authorization: token
+    }
+  });
 });
 
 afterAll(async () => {
@@ -77,5 +87,23 @@ describe("Chat server", () => {
       done();
     });
     client1.emit(DISCONNECT, {});
+  });
+  it("Should give unauthorized message if not logged in", done => {
+    unauthorizedClient = io
+      .connect(
+        "http://localhost:3001",
+        {
+          transports: ["websocket"],
+          reconnection: false,
+          reconnectionAttempts: 1
+        },
+        data => {
+          console.log(data);
+        }
+      )
+      .on("error", data => {
+        expect(data).toBe("Missing authorization header");
+        done();
+      });
   });
 });

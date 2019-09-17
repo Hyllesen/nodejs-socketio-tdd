@@ -1,10 +1,5 @@
 const joinHandler = require("../../event-handlers/join.disconnect.event-handler");
-const {
-  USER_JOIN,
-  USERS_ONLINE,
-  DISCONNECT,
-  USER_LEFT
-} = require("../../eventTypes");
+const { USER_JOIN, USERS_ONLINE, DISCONNECT } = require("../../eventTypes");
 const MockedSocket = require("socket.io-mock");
 
 let socket = new MockedSocket();
