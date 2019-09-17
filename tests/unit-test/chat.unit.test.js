@@ -14,6 +14,8 @@ let ioWithTo = {
   to: jest.fn(() => ({ emit: emitMock }))
 };
 
+socket.id = "fdmoidmfdim";
+
 people = {
   fdmoidmfdim: "ClientUser1",
   fidoimfds9: "ClientUser2"
@@ -36,7 +38,8 @@ describe("ChatHandler", () => {
     });
     expect(emitMock).toHaveBeenCalledWith(PRIVATE_MESSAGE, {
       to: "ClientUser2",
-      message: "Hi Client2!"
+      message: "Hi Client2!",
+      from: "ClientUser1"
     });
     expect(ioWithTo.to).toHaveBeenCalledWith("fidoimfds9");
   });

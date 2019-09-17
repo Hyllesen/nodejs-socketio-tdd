@@ -11,6 +11,7 @@ function handlePrivateChat(io, socket, people) {
   socket.on(PRIVATE_MESSAGE, msg => {
     const sockets = _.invert(people);
     const socketIdToMessage = sockets[msg.to];
+    msg.from = people[socket.id];
     io.to(socketIdToMessage).emit(PRIVATE_MESSAGE, msg);
   });
 }
