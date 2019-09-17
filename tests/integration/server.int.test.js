@@ -60,7 +60,11 @@ describe("Chat server", () => {
   });
   it("should be able to send private messages", done => {
     client2.once(PRIVATE_MESSAGE, data => {
-      expect(data.message).toBe("Hey Client2!");
+      expect(data).toStrictEqual({
+        to: "Client2",
+        message: "Hey Client2!",
+        from: "Client1"
+      });
       done();
     });
     client1.emit(USER_JOIN, { username: "Client1" });
