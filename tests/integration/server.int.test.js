@@ -4,7 +4,8 @@ const {
   USER_JOIN,
   USER_TYPING,
   CHAT_MESSAGE,
-  DISCONNECT
+  DISCONNECT,
+  PRIVATE_MESSAGE
 } = require("../../eventTypes");
 
 let client1, client2;
@@ -56,6 +57,15 @@ describe("Chat server", () => {
     });
     client1.emit(USER_JOIN, { username: "Client1" });
     client2.emit(USER_JOIN, { username: "Client2" });
+  });
+  it("should be able to send private messages", done => {
+    client2.once(PRIVATE_MESSAGE, data => {
+      expect(data.message).toBe("Hey Client2!");
+      done();
+    });
+    client1.emit(USER_JOIN, { username: "Client1" });
+    client2.emit(USER_JOIN, { username: "Client2" });
+    client1.emit(PRIVATE_MESSAGE, { to: "Client2", message: "Hey Client2!" });
   });
   it("should display when a user disconnects", done => {
     client2.once(DISCONNECT, data => {

@@ -10,6 +10,7 @@ io.on("connection", socket => {
   joinHandler.handleJoin(io, socket, people);
   joinHandler.handleDisconnect(io, socket, people);
   chatHandler.handleChat(io, socket);
+  chatHandler.handlePrivateChat(io, socket, people);
   typingHandler.handleTyping(io, socket, people);
 });
 
