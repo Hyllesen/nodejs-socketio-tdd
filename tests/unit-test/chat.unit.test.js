@@ -23,10 +23,13 @@ people = {
 
 describe("ChatHandler", () => {
   it("Send chat message to all users", () => {
-    const testMessage = { message: "Hello everyone!", from: "ClientUser1" };
-    chatHandler.handleChat(io, socket);
+    const testMessage = { message: "Hello everyone!" };
+    chatHandler.handleChat(io, socket, people);
     socket.socketClient.emit(CHAT_MESSAGE, testMessage);
-    expect(io.emit).toHaveBeenCalledWith(CHAT_MESSAGE, testMessage);
+    expect(io.emit).toHaveBeenCalledWith(CHAT_MESSAGE, {
+      ...testMessage,
+      from: "ClientUser1"
+    });
   });
 
   it("should be able to send private message to another user", () => {

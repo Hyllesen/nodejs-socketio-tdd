@@ -1,8 +1,9 @@
 const _ = require("lodash");
 const { CHAT_MESSAGE, PRIVATE_MESSAGE } = require("../eventTypes");
 
-function handleChat(io, socket) {
+function handleChat(io, socket, people) {
   socket.on(CHAT_MESSAGE, msg => {
+    msg.from = people[socket.id];
     io.emit(CHAT_MESSAGE, msg);
   });
 }
