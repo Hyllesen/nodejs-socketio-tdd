@@ -10,9 +10,12 @@ function handleJoin(io, socket, people) {
 }
 
 function handleDisconnect(io, socket, people) {
-  socket.on(DISCONNECT, () => {
+  console.log("handle disconnect", people);
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
     io.emit(DISCONNECT, people[socket.id] + " left the chat");
     delete people[socket.id];
+    console.log(people);
     io.emit(USERS_ONLINE, _.values(people));
   });
 }

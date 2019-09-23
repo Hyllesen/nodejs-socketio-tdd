@@ -8,22 +8,6 @@ const { CONNECTION } = require("./eventTypes");
 const people = {};
 
 io.on(CONNECTION, socket => {
-  io.use((socket, next) => {
-    if (socket.request.headers.authorization) {
-      jwt.verify(
-        socket.request.headers.authorization,
-        "dfjs98djfsd8fjsdf8h",
-        err => {
-          if (err) {
-            next(new Error("Authentication error"));
-          } else {
-            return next();
-          }
-        }
-      );
-    }
-    next(new Error("Missing authorization header"));
-  });
   joinHandler.handleJoin(io, socket, people);
   joinHandler.handleDisconnect(io, socket, people);
   chatHandler.handleChat(io, socket);
@@ -43,7 +27,6 @@ async function listen(port) {
 async function disconnect() {
   return new Promise(resolve => {
     io.close(() => {
-      //console.log("server disconnected");
       resolve();
     });
   });

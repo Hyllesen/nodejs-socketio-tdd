@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --runInBand"
+    "test": "jest --watchAll --runInBand",
+    "start": "node index.js"
   },
   "jest": {
     "testEnvironment": "node"
