@@ -8,6 +8,7 @@ const { CONNECTION } = require("./eventTypes");
 const people = {};
 
 io.on(CONNECTION, socket => {
+  console.log("socket connected", socket);
   joinHandler.handleJoin(io, socket, people);
   joinHandler.handleDisconnect(io, socket, people);
   chatHandler.handleChat(io, socket);

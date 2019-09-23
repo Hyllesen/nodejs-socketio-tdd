@@ -3,6 +3,7 @@ const _ = require("lodash");
 
 function handleJoin(io, socket, people) {
   socket.on(USER_JOIN, msg => {
+    console.log(USER_JOIN, socket, msg);
     people[socket.id] = msg.username;
     io.emit(USER_JOIN, msg.username + " joined the chat");
     io.emit(USERS_ONLINE, _.values(people));
@@ -10,9 +11,7 @@ function handleJoin(io, socket, people) {
 }
 
 function handleDisconnect(io, socket, people) {
-  console.log("handle disconnect", people);
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
+  socket.on(DISCONNECT, () => {
     io.emit(DISCONNECT, people[socket.id] + " left the chat");
     delete people[socket.id];
     console.log(people);
